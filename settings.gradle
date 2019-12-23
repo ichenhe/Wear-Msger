@@ -1,0 +1,2 @@
+include ':mobile', ':wear', ':wearmsgerlib'
+rootProject.name='WearMsgerDemo'
