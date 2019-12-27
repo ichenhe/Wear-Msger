@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">WearMsgerDemo</string>
+    <string name="send_message">Send Message</string>
+    <string name="input_content">Input content</string>
+    <string name="test_data">This is a test data.</string>
+    <string name="put_data">Put Data</string>
+    <string name="delete_data">Delete Data</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="send">Send</string>
+    <string name="delete">Delete</string>
 </resources>
