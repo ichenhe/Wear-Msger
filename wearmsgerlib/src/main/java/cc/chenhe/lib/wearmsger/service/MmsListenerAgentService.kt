@@ -1,6 +1,9 @@
 package cc.chenhe.lib.wearmsger.service
 
 import cc.chenhe.lib.wearmsger.bean.toCompat
+import cc.chenhe.lib.wearmsger.compatibility.data.DataItem
+import cc.chenhe.lib.wearmsger.compatibility.data.DataMapItem
+import com.mobvoi.android.wearable.DataEvent
 import com.mobvoi.android.wearable.DataEventBuffer
 import com.mobvoi.android.wearable.MessageEvent
 import com.mobvoi.android.wearable.WearableListenerService
@@ -40,7 +43,14 @@ internal class MmsListenerAgentService : WearableListenerService(), ListenerAgen
         super.onDataChanged(buffer)
         if (buffer == null) return
         for (event in buffer) {
-            event.dataItem
+            when (event.type) {
+                DataEvent.TYPE_CHANGED -> delegateOnDataChanged(
+                    DataMapItem.fromDataItem(DataItem(event.dataItem))
+                )
+                DataEvent.TYPE_DELETED -> delegateOnDataDeleted(
+                    DataMapItem.fromDataItem(DataItem(event.dataItem))
+                )
+            }
         }
     }
 

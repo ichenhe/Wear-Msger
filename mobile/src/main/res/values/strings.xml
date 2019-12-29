@@ -8,4 +8,6 @@
     <string name="take_photo">Take Photo</string>
     <string name="send">Send</string>
     <string name="delete">Delete</string>
+    <string name="try_to_request_something">Try to request something</string>
+    <string name="request">Request</string>
 </resources>

@@ -19,6 +19,12 @@ internal const val SEND_TIMEOUT: Long = 3000L
  */
 internal const val DATA_ID_KEY = "WearMsger_ID"
 
+/**
+ * 响应 path 前缀。
+ * 完整格式为 /WMRE/{reqId}{path}
+ */
+internal const val WMRE = "/WMRE"
+
 internal fun getClient(): ClientCompat {
     return when (WM.mode) {
         WM.MODE_GMS -> GmsImpl
@@ -46,6 +52,11 @@ object WM {
 
     var mode = MODE_UNKNOWN
         private set
+
+    /**
+     * 双向通讯等待超时时间（毫秒），包含了发送等待时间。
+     */
+    var bothWayTimeout = 3000L
 
     internal var mobvoiApiClient: MobvoiApiClient? = null
         private set

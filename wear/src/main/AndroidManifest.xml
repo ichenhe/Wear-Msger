@@ -54,6 +54,10 @@
                     android:host="*"
                     android:pathPrefix="/data/test"
                     android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/msg/request"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
 
@@ -72,6 +76,10 @@
                 <data
                     android:host="*"
                     android:pathPrefix="/data/test"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/msg/request"
                     android:scheme="wear" />
             </intent-filter>
         </service>

@@ -106,4 +106,36 @@
         app:layout_constraintStart_toStartOf="@+id/btnSendPhoto"
         app:layout_constraintTop_toBottomOf="@+id/btnSendPhoto" />
 
+    <Button
+        android:id="@+id/btnRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/request"
+        app:layout_constraintEnd_toStartOf="@+id/tvResponse"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/barrier" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="btnDelPhoto,imageView"
+        tools:layout_editor_absoluteY="731dp" />
+
+    <TextView
+        android:id="@+id/tvResponse"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/try_to_request_something"
+        app:layout_constraintBottom_toBottomOf="@+id/btnRequest"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnRequest"
+        app:layout_constraintTop_toTopOf="@+id/btnRequest" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@ package cc.chenhe.lib.wearmsger
 
 import android.content.Context
 import android.net.Uri
-import cc.chenhe.lib.wearmsger.bean.MessageResult
+import cc.chenhe.lib.wearmsger.bean.Result
 import cc.chenhe.lib.wearmsger.listener.MessageListener
 import java.nio.charset.Charset
 
@@ -18,7 +18,7 @@ object MessageHub {
         path: String,
         data: ByteArray,
         timeout: Long = SEND_TIMEOUT
-    ): MessageResult {
+    ): Result {
         return getClient().sendMessage(context, nodeId, path, data, timeout)
     }
 
@@ -29,7 +29,7 @@ object MessageHub {
         path: String,
         data: String,
         timeout: Long = SEND_TIMEOUT
-    ): MessageResult {
+    ): Result {
         return getClient().sendMessage(context, nodeId, path, data, timeout)
     }
 
@@ -44,12 +44,12 @@ object MessageHub {
         path: String,
         data: ByteArray,
         timeout: Long = SEND_TIMEOUT
-    ): MessageResult {
-        var failResult: MessageResult? = null
+    ): Result {
+        var failResult: Result? = null
         var requestId = 0L
         getClient().getNodesId(context)?.forEach { nodeId ->
             sendMessage(context, nodeId, path, data, timeout).let { r ->
-                if (r.result != MessageResult.RESULT_OK) {
+                if (r.result != Result.RESULT_OK) {
                     if (failResult != null) {
                         failResult = r
                     }
@@ -58,7 +58,7 @@ object MessageHub {
                 }
             }
         }
-        return failResult ?: MessageResult(MessageResult.RESULT_OK, requestId)
+        return failResult ?: Result(Result.RESULT_OK, requestId)
     }
 
     /**
@@ -73,7 +73,7 @@ object MessageHub {
         path: String,
         data: String,
         timeout: Long = SEND_TIMEOUT
-    ): MessageResult {
+    ): Result {
         return sendMessage(context, path, data.toByteArray(Charset.forName("utf8")), timeout)
     }
 

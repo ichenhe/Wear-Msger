@@ -1,5 +1,6 @@
 package cc.chenhe.lib.wearmsger
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -16,8 +17,10 @@ import cc.chenhe.lib.wearmsger.compatibility.data.PutDataMapRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
+@SuppressLint("SetTextI18n")
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var et: TextView
     private lateinit var iv: ImageView
     private lateinit var btnSendPhoto: Button
+    private lateinit var tvResponse: TextView
 
     private var photo: Bitmap? = null
 
@@ -44,6 +48,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             findViewById<Button>(R.id.btnSendPhoto).apply { setOnClickListener(this@MainActivity) }
         findViewById<Button>(R.id.btnDelPhoto).setOnClickListener(this)
         iv = findViewById(R.id.imageView)
+        findViewById<Button>(R.id.btnRequest).setOnClickListener(this)
+        tvResponse = findViewById(R.id.tvResponse)
     }
 
     override fun onClick(v: View) {
@@ -54,6 +60,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnTakePhoto -> dispatchTakePictureIntent()
             R.id.btnSendPhoto -> sendPhoto()
             R.id.btnDelPhoto -> delPhoto()
+            R.id.btnRequest -> request()
         }
     }
 
@@ -126,6 +133,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         GlobalScope.launch(Dispatchers.IO) {
             val r = DataHub.deleteData(ctx, "/data/photo")
             Log.i("DelPhoto", r.toString())
+        }
+    }
+
+    private fun request() {
+        tvResponse.text = "Waiting for response..."
+        GlobalScope.launch(Dispatchers.IO) {
+            val r = BothWayHub.requestForMessage(ctx, null, "/msg/request", et.text.toString())
+            withContext(Dispatchers.Main) {
+                if (r.isSuccess()) {
+                    tvResponse.text = "receive: nodeId=${r.responseNodeId}\n${r.getStringData()}"
+                } else {
+                    tvResponse.text = "fail: ${r.result}"
+                }
+            }
         }
     }
 }

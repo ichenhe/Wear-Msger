@@ -2,7 +2,7 @@ package cc.chenhe.lib.wearmsger
 
 import android.content.Context
 import android.net.Uri
-import cc.chenhe.lib.wearmsger.bean.DataResult
+import cc.chenhe.lib.wearmsger.bean.Result
 import cc.chenhe.lib.wearmsger.compatibility.data.Asset
 import cc.chenhe.lib.wearmsger.compatibility.data.PutDataMapRequest
 import cc.chenhe.lib.wearmsger.listener.DataListener
@@ -10,13 +10,21 @@ import java.io.InputStream
 
 object DataHub {
 
+    /**
+     * 添加或修改一个 data 项。
+     * 注意，若 path 和 data 内容没有变更，那么多次 put 不会重复触发监听。
+     *
+     * @param putDataMapRequest 通过 [PutDataMapRequest.create] 创建，并使用 [PutDataMapRequest.getDataMap] 来添加数据项。
+     * @param withId 是否自动加入一个 id 字段用于标识请求。若加入 id 则视为 data 内容变更，不会被系统缓存。
+     */
     @Suppress("unused")
     suspend fun putData(
         context: Context,
         putDataMapRequest: PutDataMapRequest,
-        timeout: Long = SEND_TIMEOUT
-    ): DataResult {
-        return getClient().putData(context, putDataMapRequest, timeout)
+        timeout: Long = SEND_TIMEOUT,
+        withId: Boolean = false
+    ): Result {
+        return getClient().putData(context, putDataMapRequest, timeout, withId)
     }
 
     @Suppress("unused")
@@ -24,7 +32,7 @@ object DataHub {
         context: Context,
         uri: Uri,
         timeout: Long = SEND_TIMEOUT
-    ): DataResult {
+    ): Result {
         return getClient().deleteData(context, uri, timeout)
     }
 
@@ -33,7 +41,7 @@ object DataHub {
         context: Context,
         path: String,
         timeout: Long = SEND_TIMEOUT
-    ): DataResult {
+    ): Result {
         return getClient().deleteData(context, Uri.parse("wear:$path"), timeout)
     }
 

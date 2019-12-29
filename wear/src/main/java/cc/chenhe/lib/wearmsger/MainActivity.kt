@@ -5,9 +5,7 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Looper
 import android.support.wearable.activity.WearableActivity
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import cc.chenhe.lib.wearmsger.bean.MessageEvent
@@ -36,11 +34,9 @@ class MainActivity : WearableActivity() {
 
     private val msgListener = object : MessageListener {
         override fun onMessageReceived(messageEvent: MessageEvent) {
-            Log.w("AA", "" + (Looper.getMainLooper() == Looper.myLooper()))
             messageEvent.run {
                 tv.text = "[msg] from=$sourceNodeId, path=$path, data=${getStringData()}"
             }
-            Log.i("Aty", messageEvent.toString())
         }
     }
 

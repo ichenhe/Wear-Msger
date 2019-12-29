@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.RemoteException
+import cc.chenhe.lib.wearmsger.DATA_ID_KEY
 import cc.chenhe.lib.wearmsger.bean.MessageEvent
 import cc.chenhe.lib.wearmsger.compatibility.data.DataMapItem
 import cc.chenhe.lib.wearmsger.logd
@@ -78,7 +79,13 @@ internal interface ListenerAgentService {
     fun delegateOnDataChanged(dataMapItem: DataMapItem) {
         try {
             if (isServiceReady()) {
-                targetService?.onDataChanged(dataMapItem)
+                if (dataMapItem.getDataMap().containsKey(DATA_ID_KEY)) {
+                    targetService?.onDataChanged(
+                        dataMapItem, dataMapItem.getDataMap().getLong(DATA_ID_KEY, 0)
+                    )
+                } else {
+                    targetService?.onDataChanged(dataMapItem)
+                }
             } else {
                 logDiscard("onDataChanged")
             }

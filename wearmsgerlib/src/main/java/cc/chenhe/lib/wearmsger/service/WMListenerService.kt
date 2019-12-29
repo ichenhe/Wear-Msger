@@ -76,9 +76,13 @@ abstract class WMListenerService : Service() {
     open fun onMessageReceived(messageEvent: cc.chenhe.lib.wearmsger.bean.MessageEvent) {
     }
 
+    /**
+     * @param id 标识请求，不存在默认为0.
+     */
     @WorkerThread
     open fun onDataChanged(
-        dataMapItem: cc.chenhe.lib.wearmsger.compatibility.data.DataMapItem
+        dataMapItem: cc.chenhe.lib.wearmsger.compatibility.data.DataMapItem,
+        id: Long = 0
     ) {
     }
 

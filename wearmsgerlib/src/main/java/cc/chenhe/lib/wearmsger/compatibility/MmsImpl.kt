@@ -5,8 +5,7 @@ import android.net.Uri
 import android.os.Handler
 import cc.chenhe.lib.wearmsger.DATA_ID_KEY
 import cc.chenhe.lib.wearmsger.WM
-import cc.chenhe.lib.wearmsger.bean.DataResult
-import cc.chenhe.lib.wearmsger.bean.MessageResult
+import cc.chenhe.lib.wearmsger.bean.Result
 import cc.chenhe.lib.wearmsger.bean.toCompat
 import cc.chenhe.lib.wearmsger.compatibility.data.Asset
 import cc.chenhe.lib.wearmsger.compatibility.data.DataItem
@@ -67,21 +66,21 @@ internal object MmsImpl : ClientCompat {
         path: String,
         data: ByteArray,
         timeout: Long
-    ): MessageResult = withContext(Dispatchers.IO) {
+    ): Result = withContext(Dispatchers.IO) {
         try {
             val r = Wearable.MessageApi.sendMessage(WM.mobvoiApiClient, nodeId, path, data)
                 .await(timeout, TimeUnit.MILLISECONDS)
             when {
-                r.status.isSuccess -> MessageResult(MessageResult.RESULT_OK, r.requestId.toLong())
-                r.status.isTimeout -> MessageResult(MessageResult.RESULT_TIMEOUT, 0)
-                r.status.isInterrupted || r.status.isCanceled -> MessageResult(
-                    MessageResult.RESULT_INTERRUPTED,
+                r.status.isSuccess -> Result(Result.RESULT_OK, r.requestId.toLong())
+                r.status.isTimeout -> Result(Result.RESULT_TIMEOUT, 0)
+                r.status.isInterrupted || r.status.isCanceled -> Result(
+                    Result.RESULT_INTERRUPTED,
                     0
                 )
-                else -> MessageResult(MessageResult.RESULT_FAIL, 0)
+                else -> Result(Result.RESULT_FAIL, 0)
             }
         } catch (e: Exception) {
-            MessageResult(MessageResult.RESULT_FAIL, 0)
+            Result(Result.RESULT_FAIL, 0)
         }
     }
 
@@ -151,24 +150,28 @@ internal object MmsImpl : ClientCompat {
     override suspend fun putData(
         context: Context,
         putDataMapRequest: PutDataMapRequest,
-        timeout: Long
-    ): DataResult = withContext(Dispatchers.IO) {
+        timeout: Long,
+        withId: Boolean
+    ): Result = withContext(Dispatchers.IO) {
         putDataMapRequest.mms?.let {
-            val id = System.nanoTime()
-            it.dataMap.putLong(DATA_ID_KEY, id)
+            var id = 0L
+            if (withId) {
+                id = System.nanoTime()
+                it.dataMap.putLong(DATA_ID_KEY, id)
+            }
             try {
                 val r = Wearable.DataApi.putDataItem(WM.mobvoiApiClient, it.asPutDataRequest())
                     .await(timeout, TimeUnit.MILLISECONDS)
                 when {
-                    r.status.isSuccess -> DataResult(DataResult.RESULT_OK)
-                    r.status.isTimeout -> DataResult(DataResult.RESULT_TIMEOUT)
-                    r.status.isInterrupted || r.status.isCanceled -> DataResult(
-                        DataResult.RESULT_INTERRUPTED
+                    r.status.isSuccess -> Result(Result.RESULT_OK, id)
+                    r.status.isTimeout -> Result(Result.RESULT_TIMEOUT)
+                    r.status.isInterrupted || r.status.isCanceled -> Result(
+                        Result.RESULT_INTERRUPTED
                     )
-                    else -> DataResult(MessageResult.RESULT_FAIL)
+                    else -> Result(Result.RESULT_FAIL)
                 }
             } catch (e: Exception) {
-                DataResult(DataResult.RESULT_TIMEOUT)
+                Result(Result.RESULT_TIMEOUT)
             }
         } ?: throw IllegalArgumentException("MMS needed, given is GMS or null.")
     }
@@ -177,20 +180,20 @@ internal object MmsImpl : ClientCompat {
         context: Context,
         uri: Uri,
         timeout: Long
-    ): DataResult = withContext(Dispatchers.IO) {
+    ): Result = withContext(Dispatchers.IO) {
         try {
             val r = Wearable.DataApi.deleteDataItems(WM.mobvoiApiClient, uri)
                 .await(timeout, TimeUnit.MILLISECONDS)
             when {
-                r.status.isSuccess -> DataResult(DataResult.RESULT_OK)
-                r.status.isTimeout -> DataResult(DataResult.RESULT_TIMEOUT)
-                r.status.isInterrupted || r.status.isCanceled -> DataResult(
-                    DataResult.RESULT_INTERRUPTED
+                r.status.isSuccess -> Result(Result.RESULT_OK)
+                r.status.isTimeout -> Result(Result.RESULT_TIMEOUT)
+                r.status.isInterrupted || r.status.isCanceled -> Result(
+                    Result.RESULT_INTERRUPTED
                 )
-                else -> DataResult(MessageResult.RESULT_FAIL)
+                else -> Result(Result.RESULT_FAIL)
             }
         } catch (e: Exception) {
-            DataResult(DataResult.RESULT_TIMEOUT)
+            Result(Result.RESULT_TIMEOUT)
         }
     }
 

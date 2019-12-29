@@ -2,8 +2,7 @@ package cc.chenhe.lib.wearmsger.compatibility
 
 import android.content.Context
 import android.net.Uri
-import cc.chenhe.lib.wearmsger.bean.DataResult
-import cc.chenhe.lib.wearmsger.bean.MessageResult
+import cc.chenhe.lib.wearmsger.bean.Result
 import cc.chenhe.lib.wearmsger.compatibility.data.Asset
 import cc.chenhe.lib.wearmsger.compatibility.data.PutDataMapRequest
 import cc.chenhe.lib.wearmsger.listener.DataListener
@@ -27,7 +26,7 @@ internal interface ClientCompat {
         path: String,
         data: String,
         timeout: Long
-    ): MessageResult {
+    ): Result {
         return sendMessage(context, nodeId, path, data.toByteArray(), timeout)
     }
 
@@ -37,7 +36,7 @@ internal interface ClientCompat {
         path: String,
         data: ByteArray,
         timeout: Long
-    ): MessageResult
+    ): Result
 
     suspend fun getNodesId(context: Context): List<String>?
 
@@ -55,14 +54,15 @@ internal interface ClientCompat {
     suspend fun putData(
         context: Context,
         putDataMapRequest: PutDataMapRequest,
-        timeout: Long
-    ): DataResult
+        timeout: Long,
+        withId: Boolean
+    ): Result
 
     suspend fun deleteData(
         context: Context,
         uri: Uri,
         timeout: Long
-    ): DataResult
+    ): Result
 
     fun addDataListener(
         context: Context,

@@ -2,8 +2,8 @@ package cc.chenhe.lib.wearmsger.compatibility
 
 import android.content.Context
 import android.net.Uri
-import cc.chenhe.lib.wearmsger.bean.DataResult
-import cc.chenhe.lib.wearmsger.bean.MessageResult
+import cc.chenhe.lib.wearmsger.DATA_ID_KEY
+import cc.chenhe.lib.wearmsger.bean.Result
 import cc.chenhe.lib.wearmsger.bean.toCompat
 import cc.chenhe.lib.wearmsger.compatibility.data.Asset
 import cc.chenhe.lib.wearmsger.compatibility.data.DataItem
@@ -55,19 +55,19 @@ internal object GmsImpl : ClientCompat {
         path: String,
         data: ByteArray,
         timeout: Long
-    ): MessageResult = withContext(Dispatchers.IO) {
+    ): Result = withContext(Dispatchers.IO) {
         val sendMessageTask = Wearable.getMessageClient(context).sendMessage(nodeId, path, data)
         try {
-            MessageResult(
-                MessageResult.RESULT_OK,
+            Result(
+                Result.RESULT_OK,
                 Tasks.await(sendMessageTask, timeout, TimeUnit.MILLISECONDS).toLong()
             )
         } catch (e: ExecutionException) {
-            MessageResult(MessageResult.RESULT_FAIL, 0)
+            Result(Result.RESULT_FAIL, 0)
         } catch (e: InterruptedException) {
-            MessageResult(MessageResult.RESULT_INTERRUPTED, 0)
+            Result(Result.RESULT_INTERRUPTED, 0)
         } catch (e: TimeoutException) {
-            MessageResult(MessageResult.RESULT_TIMEOUT, 0)
+            Result(Result.RESULT_TIMEOUT, 0)
         }
     }
 
@@ -117,19 +117,25 @@ internal object GmsImpl : ClientCompat {
     override suspend fun putData(
         context: Context,
         putDataMapRequest: cc.chenhe.lib.wearmsger.compatibility.data.PutDataMapRequest,
-        timeout: Long
-    ): DataResult = withContext(Dispatchers.IO) {
+        timeout: Long,
+        withId: Boolean
+    ): Result = withContext(Dispatchers.IO) {
         putDataMapRequest.gms?.let {
+            var id = 0L
+            if (withId) {
+                id = System.nanoTime()
+                it.dataMap.putLong(DATA_ID_KEY, id)
+            }
             val task = Wearable.getDataClient(context).putDataItem(it.asPutDataRequest())
             try {
                 Tasks.await(task, timeout, TimeUnit.MILLISECONDS)
-                DataResult(DataResult.RESULT_OK)
+                Result(Result.RESULT_OK, id)
             } catch (e: ExecutionException) {
-                DataResult(DataResult.RESULT_FAIL)
+                Result(Result.RESULT_FAIL)
             } catch (e: InterruptedException) {
-                DataResult(DataResult.RESULT_INTERRUPTED)
+                Result(Result.RESULT_INTERRUPTED)
             } catch (e: TimeoutException) {
-                DataResult(DataResult.RESULT_TIMEOUT)
+                Result(Result.RESULT_TIMEOUT)
             }
         } ?: throw IllegalArgumentException("GMS needed, given is MMS or null.")
     }
@@ -138,17 +144,17 @@ internal object GmsImpl : ClientCompat {
         context: Context,
         uri: Uri,
         timeout: Long
-    ): DataResult = withContext(Dispatchers.IO) {
+    ): Result = withContext(Dispatchers.IO) {
         val task = Wearable.getDataClient(context).deleteDataItems(uri)
         try {
             Tasks.await(task, timeout, TimeUnit.MILLISECONDS)
-            DataResult(DataResult.RESULT_OK)
+            Result(Result.RESULT_OK)
         } catch (e: ExecutionException) {
-            DataResult(DataResult.RESULT_FAIL)
+            Result(Result.RESULT_FAIL)
         } catch (e: InterruptedException) {
-            DataResult(DataResult.RESULT_INTERRUPTED)
+            Result(Result.RESULT_INTERRUPTED)
         } catch (e: TimeoutException) {
-            DataResult(DataResult.RESULT_TIMEOUT)
+            Result(Result.RESULT_TIMEOUT)
         }
     }
 
