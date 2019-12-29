@@ -1,4 +1,4 @@
-package cc.chenhe.lib.wearmsger
+package cc.chenhe.lib.wearmsger.demo
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
 import android.widget.ImageView
 import android.widget.TextView
+import cc.chenhe.lib.wearmsger.DataHub
+import cc.chenhe.lib.wearmsger.MessageHub
 import cc.chenhe.lib.wearmsger.bean.MessageEvent
 import cc.chenhe.lib.wearmsger.compatibility.data.DataMapItem
 import cc.chenhe.lib.wearmsger.listener.DataListener
@@ -71,13 +73,20 @@ class MainActivity : WearableActivity() {
 
     override fun onStart() {
         super.onStart()
-        MessageHub.addMessageListener(this, msgListener, Uri.parse("wear:/msg/test"))
+        MessageHub.addMessageListener(
+            this,
+            msgListener,
+            Uri.parse("wear:/msg/test")
+        )
         DataHub.addDataListener(this, dataListener)
     }
 
     override fun onStop() {
         super.onStop()
-        MessageHub.removeMessageListener(this, msgListener)
+        MessageHub.removeMessageListener(
+            this,
+            msgListener
+        )
         DataHub.removeDataListener(this, dataListener)
     }
 }

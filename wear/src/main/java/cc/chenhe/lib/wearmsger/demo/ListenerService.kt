@@ -1,8 +1,9 @@
-package cc.chenhe.lib.wearmsger
+package cc.chenhe.lib.wearmsger.demo
 
 import android.net.Uri
 import android.os.Looper
 import android.util.Log
+import cc.chenhe.lib.wearmsger.BothWayHub
 import cc.chenhe.lib.wearmsger.bean.MessageEvent
 import cc.chenhe.lib.wearmsger.compatibility.data.DataMapItem
 import cc.chenhe.lib.wearmsger.service.WMListenerService
@@ -17,7 +18,13 @@ internal class ListenerService : WMListenerService() {
 
         if (messageEvent.path == "/msg/request") {
             // Response the both way request
-            GlobalScope.launch { BothWayHub.response(this@ListenerService, messageEvent, "Hello!") }
+            GlobalScope.launch {
+                BothWayHub.response(
+                    this@ListenerService,
+                    messageEvent,
+                    "Hello!"
+                )
+            }
         }
     }
 

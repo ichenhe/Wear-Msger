@@ -1,4 +1,4 @@
-package cc.chenhe.lib.wearmsger
+package cc.chenhe.lib.wearmsger.demo
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,6 +12,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import cc.chenhe.lib.wearmsger.BothWayHub
+import cc.chenhe.lib.wearmsger.DataHub
+import cc.chenhe.lib.wearmsger.MessageHub
 import cc.chenhe.lib.wearmsger.compatibility.data.Asset
 import cc.chenhe.lib.wearmsger.compatibility.data.PutDataMapRequest
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +69,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun sendMessage() {
         GlobalScope.launch {
-            val mr = MessageHub.sendMessage(ctx, "/msg/test", et.text.toString())
+            val mr = MessageHub.sendMessage(
+                ctx,
+                "/msg/test",
+                et.text.toString()
+            )
             Log.i("SendMsg", mr.toString())
         }
     }
@@ -94,7 +101,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (takePictureIntent.resolveActivity(packageManager) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            startActivityForResult(
+                takePictureIntent,
+                REQUEST_IMAGE_CAPTURE
+            )
         }
     }
 
@@ -131,7 +141,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun delPhoto() {
         GlobalScope.launch(Dispatchers.IO) {
-            val r = DataHub.deleteData(ctx, "/data/photo")
+            val r =
+                DataHub.deleteData(ctx, "/data/photo")
             Log.i("DelPhoto", r.toString())
         }
     }
@@ -139,7 +150,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun request() {
         tvResponse.text = "Waiting for response..."
         GlobalScope.launch(Dispatchers.IO) {
-            val r = BothWayHub.requestForMessage(ctx, null, "/msg/request", et.text.toString())
+            val r = BothWayHub.requestForMessage(
+                ctx,
+                null,
+                "/msg/request",
+                et.text.toString()
+            )
             withContext(Dispatchers.Main) {
                 if (r.isSuccess()) {
                     tvResponse.text = "receive: nodeId=${r.responseNodeId}\n${r.getStringData()}"
