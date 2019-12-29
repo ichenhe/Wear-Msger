@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import cc.chenhe.lib.wearmsger.DATA_ID_KEY
-import cc.chenhe.lib.wearmsger.WM
+import cc.chenhe.lib.wearmsger.MmsClientManager
 import cc.chenhe.lib.wearmsger.bean.Result
 import cc.chenhe.lib.wearmsger.bean.toCompat
 import cc.chenhe.lib.wearmsger.compatibility.data.Asset
@@ -16,6 +16,8 @@ import cc.chenhe.lib.wearmsger.listener.MessageListener
 import cc.chenhe.lib.wearmsger.logw
 import com.mobvoi.android.wearable.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
@@ -45,19 +47,22 @@ internal object MmsImpl : ClientCompat {
     }
 
     override fun removeAllListeners(context: Context) {
-        for ((k, v) in listeners) {
-            if (k is MessageListener && v is MessageApi.MessageListener) {
-                Wearable.MessageApi.removeListener(WM.mobvoiApiClient, v)
-            } else if (k is DataListener && v is DataApi.DataListener) {
-                Wearable.DataApi.removeListener(WM.mobvoiApiClient, v)
-            } else {
-                logw(
-                    TAG,
-                    "Unknown listener type: ${k::class.java.simpleName}, upstream: ${v::class.java.simpleName}"
-                )
+        GlobalScope.launch(Dispatchers.IO) {
+            val mobvoiClient = MmsClientManager.getClient(context)
+            for ((k, v) in listeners) {
+                if (k is MessageListener && v is MessageApi.MessageListener) {
+                    Wearable.MessageApi.removeListener(mobvoiClient, v)
+                } else if (k is DataListener && v is DataApi.DataListener) {
+                    Wearable.DataApi.removeListener(mobvoiClient, v)
+                } else {
+                    logw(
+                        TAG,
+                        "Unknown listener type: ${k::class.java.simpleName}, upstream: ${v::class.java.simpleName}"
+                    )
+                }
             }
+            listeners.clear()
         }
-        listeners.clear()
     }
 
     override suspend fun sendMessage(
@@ -68,7 +73,12 @@ internal object MmsImpl : ClientCompat {
         timeout: Long
     ): Result = withContext(Dispatchers.IO) {
         try {
-            val r = Wearable.MessageApi.sendMessage(WM.mobvoiApiClient, nodeId, path, data)
+            val r = Wearable.MessageApi.sendMessage(
+                MmsClientManager.getClient(context),
+                nodeId,
+                path,
+                data
+            )
                 .await(timeout, TimeUnit.MILLISECONDS)
             when {
                 r.status.isSuccess -> Result(Result.RESULT_OK, r.requestId.toLong())
@@ -86,7 +96,8 @@ internal object MmsImpl : ClientCompat {
 
     override suspend fun getNodesId(context: Context): List<String>? = withContext(Dispatchers.IO) {
         try {
-            Wearable.NodeApi.getConnectedNodes(WM.mobvoiApiClient).await().nodes.map { it.id }
+            Wearable.NodeApi.getConnectedNodes(MmsClientManager.getClient(context)).await()
+                .nodes.map { it.id }
         } catch (e: Exception) {
             null
         }
@@ -98,15 +109,18 @@ internal object MmsImpl : ClientCompat {
         uri: Uri?,
         literal: Boolean
     ) {
-        MessageApi.MessageListener { event ->
-            if (match(uri, literal, event)) {
-                getHandler(context).post {
-                    listener.preProcess(event.toCompat())
+        GlobalScope.launch(Dispatchers.IO) {
+            val mobvoiClient = MmsClientManager.getClient(context)
+            MessageApi.MessageListener { event ->
+                if (match(uri, literal, event)) {
+                    getHandler(context).post {
+                        listener.preProcess(event.toCompat())
+                    }
                 }
+            }.let {
+                Wearable.MessageApi.addListener(mobvoiClient, it)
+                listeners[listener] = it
             }
-        }.let {
-            Wearable.MessageApi.addListener(WM.mobvoiApiClient, it)
-            listeners[listener] = it
         }
     }
 
@@ -138,10 +152,13 @@ internal object MmsImpl : ClientCompat {
 
     override fun removeMessageListener(context: Context, listener: MessageListener) {
         if (listeners.containsKey(listener)) {
-            listeners[listener]?.let {
-                if (it is MessageApi.MessageListener) {
-                    Wearable.MessageApi.removeListener(WM.mobvoiApiClient, it)
-                    listeners.remove(listener)
+            GlobalScope.launch(Dispatchers.IO) {
+                val mobvoiClient = MmsClientManager.getClient(context)
+                listeners[listener]?.let {
+                    if (it is MessageApi.MessageListener) {
+                        Wearable.MessageApi.removeListener(mobvoiClient, it)
+                        listeners.remove(listener)
+                    }
                 }
             }
         }
@@ -160,8 +177,10 @@ internal object MmsImpl : ClientCompat {
                 it.dataMap.putLong(DATA_ID_KEY, id)
             }
             try {
-                val r = Wearable.DataApi.putDataItem(WM.mobvoiApiClient, it.asPutDataRequest())
-                    .await(timeout, TimeUnit.MILLISECONDS)
+                val r = Wearable.DataApi.putDataItem(
+                    MmsClientManager.getClient(context),
+                    it.asPutDataRequest()
+                ).await(timeout, TimeUnit.MILLISECONDS)
                 when {
                     r.status.isSuccess -> Result(Result.RESULT_OK, id)
                     r.status.isTimeout -> Result(Result.RESULT_TIMEOUT)
@@ -182,7 +201,7 @@ internal object MmsImpl : ClientCompat {
         timeout: Long
     ): Result = withContext(Dispatchers.IO) {
         try {
-            val r = Wearable.DataApi.deleteDataItems(WM.mobvoiApiClient, uri)
+            val r = Wearable.DataApi.deleteDataItems(MmsClientManager.getClient(context), uri)
                 .await(timeout, TimeUnit.MILLISECONDS)
             when {
                 r.status.isSuccess -> Result(Result.RESULT_OK)
@@ -222,8 +241,11 @@ internal object MmsImpl : ClientCompat {
                 }
             }
         }.let {
-            Wearable.DataApi.addListener(WM.mobvoiApiClient, it)
-            listeners[listener] = it
+            GlobalScope.launch(Dispatchers.IO) {
+                val mobvoiClient = MmsClientManager.getClient(context)
+                Wearable.DataApi.addListener(mobvoiClient, it)
+                listeners[listener] = it
+            }
         }
     }
 
@@ -231,8 +253,11 @@ internal object MmsImpl : ClientCompat {
         if (listeners.containsKey(listener)) {
             listeners[listener]?.let {
                 if (it is DataApi.DataListener) {
-                    Wearable.DataApi.removeListener(WM.mobvoiApiClient, it)
-                    listeners.remove(listener)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        val mobvoiClient = MmsClientManager.getClient(context)
+                        Wearable.DataApi.removeListener(mobvoiClient, it)
+                        listeners.remove(listener)
+                    }
                 }
             }
         }
@@ -244,7 +269,7 @@ internal object MmsImpl : ClientCompat {
         timeout: Long
     ): InputStream? = withContext(Dispatchers.IO) {
         try {
-            Wearable.DataApi.getFdForAsset(WM.mobvoiApiClient, asset.mms!!)
+            Wearable.DataApi.getFdForAsset(MmsClientManager.getClient(context), asset.mms!!)
                 .await(timeout, TimeUnit.MILLISECONDS).inputStream
         } catch (e: Exception) {
             e.printStackTrace()

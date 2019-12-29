@@ -6,8 +6,6 @@ import cc.chenhe.lib.wearmsger.compatibility.ClientCompat
 import cc.chenhe.lib.wearmsger.compatibility.GmsImpl
 import cc.chenhe.lib.wearmsger.compatibility.MmsImpl
 import com.mobvoi.android.common.MobvoiApiManager
-import com.mobvoi.android.common.api.MobvoiApiClient
-import com.mobvoi.android.wearable.Wearable
 
 /**
  * 发送请求超时时长，指的是提交到 GMS 而不是到达目标设备。
@@ -58,9 +56,6 @@ object WM {
      */
     var bothWayTimeout = 3000L
 
-    internal var mobvoiApiClient: MobvoiApiClient? = null
-        private set
-
     /**
      * 初始化。
      * @throws IllegalStateException 设备不支持指定模式时抛出此异常。
@@ -76,8 +71,7 @@ object WM {
     }
 
     private fun initGMS(context: Context, check: Boolean = false) {
-        mobvoiApiClient?.disconnect()
-        mobvoiApiClient = null
+        MmsClientManager.destroy()
         if (check || MobvoiApiManager.getInstance().isGmsAvailable(context)) {
             this.mode = MODE_GMS
         } else {
@@ -93,10 +87,6 @@ object WM {
                     context.applicationContext,
                     MobvoiApiManager.ApiGroup.MMS
                 )
-                mobvoiApiClient = MobvoiApiClient.Builder(context.applicationContext)
-                    .addApi(Wearable.API)
-                    .build()
-                mobvoiApiClient?.connect()
             }
         } else {
             throw IllegalStateException("MMS not supported")
