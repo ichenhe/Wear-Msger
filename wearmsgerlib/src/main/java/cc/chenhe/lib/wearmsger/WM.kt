@@ -1,5 +1,6 @@
 package cc.chenhe.lib.wearmsger
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import cc.chenhe.lib.wearmsger.compatibility.ClientCompat
@@ -48,6 +49,8 @@ object WM {
     const val MODE_MMS = 1
     const val MODE_UNKNOWN = -1
 
+    private const val TAG = "WearMsger"
+
     var mode = MODE_UNKNOWN
         private set
 
@@ -94,16 +97,18 @@ object WM {
     }
 
     private fun autoDetect(context: Context) {
-        when {
-            MobvoiApiManager.getInstance().isGmsAvailable(context) -> {
-                initGMS(context, true)
-            }
-            MobvoiApiManager.getInstance().isMmsAvailable(context) -> {
-                initMMS(context, true)
-            }
-            else -> {
-                throw IllegalStateException("None GMS or MMS supported")
-            }
+        val isWatch = context.packageManager.hasSystemFeature("android.hardware.type.watch")
+        if (isWatch && isTicwear()) {
+            logd(TAG, "Detect ticwear in watch device, use MMS mode.")
+            initMMS(context, true)
+        } else if (MobvoiApiManager.getInstance().isGmsAvailable(context)) {
+            logd(TAG, "No ticwear rom and GMS is available, use GMS mode.")
+            initGMS(context, true)
+        } else if (MobvoiApiManager.getInstance().isMmsAvailable(context)) {
+            logd(TAG, "Only MMS is available, use MMS mode.")
+            initMMS(context, true)
+        } else {
+            throw IllegalStateException("None GMS or MMS supported")
         }
     }
 
@@ -120,5 +125,18 @@ object WM {
          * 自动判断类型。
          */
         AUTO
+    }
+
+    private fun isTicwear(): Boolean {
+        var value = "unknown"
+        try {
+            @SuppressLint("PrivateApi")
+            val c = Class.forName("android.os.SystemProperties")
+            val get = c.getMethod("get", String::class.java, String::class.java)
+            value = get.invoke(c, "ticwear.version.name", "unknown") as String
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return value != "unknown"
     }
 }
