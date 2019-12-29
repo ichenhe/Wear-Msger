@@ -66,6 +66,9 @@ object WM {
     @JvmStatic
     @Suppress("unused")
     fun init(context: Context, mode: Mode) {
+        if (this.mode != MODE_UNKNOWN) {
+            getClient().removeAllListeners(context)
+        }
         when (mode) {
             Mode.GMS -> initGMS(context)
             Mode.MMS -> initMMS(context)
