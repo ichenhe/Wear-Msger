@@ -19,12 +19,14 @@ WearMsger 是 [WearTools](https://github.com/liangchenhe55/WearTools) 的升级�
 - 使用协程等现代化技术。
 - 支持 Request/Response 模型。
 - 支持超时返回。
-
+version
 ## 依赖
+
+> 请最低使用 `1.0.3`，更低的版本因为 ProGuard 配置错误无法找到所需的类。
 
 1. 添加依赖。
 
-   在 Module 的 build.gradle 中添加 WearTools 的依赖：`implementation 'cc.chenhe:wear-msger:1.0.0'`
+   在 Module 的 build.gradle 中添加 WearTools 的依赖：`implementation "cc.chenhe:wear-msger:{version}"`
    如果正在使用 Android studio 3.0 以下版本，请把 `implementation` 替换为 `compile`.
 
 2. 删除多余依赖。
@@ -60,9 +62,11 @@ WearMsger can dramatically simplify the communication code between wear and mobi
 
 ## Dependence
 
+> Please use at leate `1.0.3`. Earlier versions cannot find classes because of ProGuard configuration errors.
+
 1. Add dependence.
 
-   Add dependence in Module's build.gradle: `implementation 'cc.chenhe:wear-msger:1.0.0'`.
+   Add dependence in Module's build.gradle: `implementation "cc.chenhe:wear-msger:{version}"`.
    If you are using Android studio below 3.0，please replace `implementation` with `compile`.
 
 2. Delete redundant dependencies.
