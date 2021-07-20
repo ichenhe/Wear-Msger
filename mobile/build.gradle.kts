@@ -6,7 +6,6 @@ plugins {
 
 android {
     compileSdkVersion(29)
-    buildToolsVersion = "29.0.3"
     defaultConfig {
         applicationId("cc.chenhe.lib.wearmsger.demo")
         minSdkVersion(21)

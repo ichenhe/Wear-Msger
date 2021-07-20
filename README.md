@@ -1,12 +1,12 @@
 # Wear Msger
 
-[ ![Download](https://api.bintray.com/packages/liangchenhe55/maven/wear-msger/images/download.svg) ](https://bintray.com/liangchenhe55/maven/wear-msger/_latestVersion)
+[![Download](https://img.shields.io/maven-central/v/me.chenhe/wearmsger?style=flat-square)](https://search.maven.org/artifact/me.chenhe/wearmsger) ![](https://img.shields.io/github/license/ichenhe/wear-msger?style=flat-square)
 
 **[English](#english)**
 
 ## 概述
 
-WearMsger 是 [WearTools](https://github.com/liangchenhe55/WearTools) 的升级版， 二次封装了 [Ticear提供的SDK](https://bintray.com/ticwear/maven/mobvoi-api) 以及 Google WearOS API，能够兼容 WearOS、WearOS China、Ticwear 系统。下载量超10万的[腕间图库](http://wg.chenhe.cc/)使用的即是此库。
+WearMsger 是 [WearTools](https://github.com/ichenhe/WearTools) 的升级版， 二次封装了 [Ticear提供的SDK](https://bintray.com/ticwear/maven/mobvoi-api) 以及 Google WearOS API，能够兼容 WearOS、WearOS China、Ticwear 系统。下载量超10万的[腕间图库](http://wg.chenhe.cc/)使用的即是此库。
 
 弱弱地求个Star★(*￣3￣)╭ 
 
@@ -19,19 +19,18 @@ WearMsger 是 [WearTools](https://github.com/liangchenhe55/WearTools) 的升级�
 - 使用协程等现代化技术。
 - 支持 Request/Response 模型。
 - 支持超时返回。
-version
 ## 依赖
 
 > 请最低使用 `1.0.3`，更低的版本因为 ProGuard 配置错误无法找到所需的类。
 
 1. 添加依赖。
 
-   在 Module 的 build.gradle 中添加 WearTools 的依赖：`implementation "cc.chenhe:wear-msger:{version}"`
+   在 Module 的 build.gradle 中添加 WearTools 的依赖：`implementation "me.chenhe:wear-msger:{version}"`
    如果正在使用 Android studio 3.0 以下版本，请把 `implementation` 替换为 `compile`.
 
-2. 删除多余依赖。
+2. 额外依赖。
 
-   你没必要再添加 `com.ticwear:mobvoi-api` 或 `com.google.android.gms:play-services-wearable` 的依赖项，其他需求除外。
+   由于 JCenter 已经停止维护个人仓库，并且 Ticwear 也已经停止维护。但是 Android Studio 无法对本地依赖的 aar 进行打包。所以请务必手动添加 [mobvoi.aar](https://github.com/ichenhe/Wear-Msger/blob/master/wearmsgerlib/libs/mobvoi-api-1.1.1.aar) 为依赖项。
 
 
 ### 具体使用方法见 [Wiki](https://github.com/liangchenhe55/Wear-Msger/wiki)
@@ -69,9 +68,9 @@ WearMsger can dramatically simplify the communication code between wear and mobi
    Add dependence in Module's build.gradle: `implementation "cc.chenhe:wear-msger:{version}"`.
    If you are using Android studio below 3.0，please replace `implementation` with `compile`.
 
-2. Delete redundant dependencies.
+2. Extra dependence.
 
-   You do not need depend `com.ticwear:mobvoi-api` or `com.google.android.gms:play-services-wearable` again except other uses, because the two libraries were already included on the project.
+   Jcenter has stopped maintaining personal repositories, and Ticwear has stopped maintenance. But Android Studio cannot package local aar dependent to aar. So be sure to manually add [mobvoi.aar](https://github.com/ichenhe/Wear-Msger/blob/master/wearmsgerlib/libs/mobvoi-api-1.1.1.aar) as a dependency.
 
 
 ### For the detail of usage, see [Wiki](https://github.com/liangchenhe55/Wear-Msger/wiki).
