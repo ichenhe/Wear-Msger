@@ -64,6 +64,7 @@ object BothWayHub {
 
                     override fun onMessageReceived(messageEvent: MessageEvent) {}
                 }
+                // '*' is necessary because the data response will be added with some strange characters
                 val filter = Uri.parse("wear://*$WMRE/${send.requestId}$path")
                 MessageHub.addMessageListener(context.applicationContext, listener, filter)
 
@@ -166,7 +167,7 @@ object BothWayHub {
                     override fun onDataChanged(dataMapItem: DataMapItem) {}
                     override fun onDataDeleted(uri: Uri) {}
                 }
-                val filter = Uri.parse("wear://$WMRE/${send.requestId}$path")
+                val filter = Uri.parse("wear://*$WMRE/${send.requestId}$path")
                 DataHub.addDataListener(context.applicationContext, listener, filter)
 
                 cont.invokeOnCancellation {
@@ -252,7 +253,7 @@ object BothWayHub {
                     override fun onMessageReceived(messageEvent: MessageEvent) {}
                 }
                 val filter =
-                    Uri.parse("wear://$WMRE/${send.requestId}${putDataMapRequest.uri.path}")
+                    Uri.parse("wear://*$WMRE/${send.requestId}${putDataMapRequest.uri.path}")
                 MessageHub.addMessageListener(context.applicationContext, listener, filter)
 
                 cont.invokeOnCancellation {

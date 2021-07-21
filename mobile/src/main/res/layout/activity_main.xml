@@ -118,6 +118,17 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/barrier" />
 
+    <Button
+        android:id="@+id/btnRequestData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/request_data"
+        app:layout_constraintEnd_toStartOf="@+id/tvResponse"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/btnRequest" />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"
         android:layout_width="wrap_content"
@@ -137,5 +148,17 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnRequest"
         app:layout_constraintTop_toTopOf="@+id/btnRequest" />
+
+    <TextView
+        android:id="@+id/tvResponseData"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/try_to_request_something"
+        app:layout_constraintBottom_toBottomOf="@+id/btnRequestData"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/btnRequest"
+        app:layout_constraintTop_toTopOf="@+id/btnRequestData" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

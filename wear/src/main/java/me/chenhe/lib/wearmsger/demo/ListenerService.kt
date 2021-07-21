@@ -24,6 +24,12 @@ internal class ListenerService : WMListenerService() {
                     "Hello!"
                 )
             }
+        } else if (messageEvent.path == "/msg/request_data") {
+            GlobalScope.launch {
+                val resp = BothWayHub.obtainResponseDataRequest(messageEvent)
+                resp.dataMap.putString("data", "Hello data!")
+                BothWayHub.response(this@ListenerService, resp)
+            }
         }
     }
 

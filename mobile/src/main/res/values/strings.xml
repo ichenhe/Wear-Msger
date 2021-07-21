@@ -9,5 +9,6 @@
     <string name="send">Send</string>
     <string name="delete">Delete</string>
     <string name="try_to_request_something">Try to request something</string>
-    <string name="request">Request</string>
+    <string name="request">Request for msg</string>
+    <string name="request_data">Request for data</string>
 </resources>

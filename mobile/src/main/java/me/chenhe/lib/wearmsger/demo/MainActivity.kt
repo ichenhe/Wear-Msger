@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var iv: ImageView
     private lateinit var btnSendPhoto: Button
     private lateinit var tvResponse: TextView
+    private lateinit var tvDataResponse: TextView
 
     private var photo: Bitmap? = null
 
@@ -49,7 +50,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         findViewById<Button>(R.id.btnDelPhoto).setOnClickListener(this)
         iv = findViewById(R.id.imageView)
         findViewById<Button>(R.id.btnRequest).setOnClickListener(this)
+        findViewById<Button>(R.id.btnRequestData).setOnClickListener(this)
         tvResponse = findViewById(R.id.tvResponse)
+        tvDataResponse = findViewById(R.id.tvResponseData)
     }
 
     override fun onClick(v: View) {
@@ -61,6 +64,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnSendPhoto -> sendPhoto()
             R.id.btnDelPhoto -> delPhoto()
             R.id.btnRequest -> request()
+            R.id.btnRequestData -> requestForData()
         }
     }
 
@@ -160,6 +164,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     tvResponse.text = "receive: nodeId=${r.responseNodeId}\n${r.getStringData()}"
                 } else {
                     tvResponse.text = "fail: ${r.result}"
+                }
+            }
+        }
+    }
+
+    private fun requestForData() {
+        tvDataResponse.text = "Waiting for response..."
+        lifecycleScope.launch(Dispatchers.IO) {
+            val r = BothWayHub.requestForData(ctx, null, "/msg/request_data", et.text.toString())
+            withContext(Dispatchers.Main) {
+                if (r.isSuccess()) {
+                    tvDataResponse.text = "receive: ${r.dataMapItem!!.dataMap.getString("data")}"
+                } else {
+                    tvDataResponse.text = "fail: ${r.result}"
                 }
             }
         }
