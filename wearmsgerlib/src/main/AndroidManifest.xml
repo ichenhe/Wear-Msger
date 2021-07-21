@@ -1,2 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cc.chenhe.lib.wearmsger" />
+    package="me.chenhe.lib.wearmsger">
+
+    <queries>
+        <package android:name="com.google.android.gms" />
+        <package android:name="com.google.android.wearable.app" />
+        <package android:name="com.google.android.wearable.app.cn" />
+    </queries>
+
+</manifest>

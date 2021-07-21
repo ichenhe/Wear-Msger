@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     defaultConfig {
-        applicationId("cc.chenhe.lib.wearmsger.demo")
+        applicationId("me.chenhe.wearmsger.demo")
         minSdkVersion(22)
-        targetSdkVersion(29)
+        targetSdkVersion(30)
         versionCode(1)
         versionName("1.0")
     }

@@ -2,6 +2,10 @@
 
 [![Download](https://img.shields.io/maven-central/v/me.chenhe/wearmsger?style=flat-square)](https://search.maven.org/artifact/me.chenhe/wearmsger) ![](https://img.shields.io/github/license/ichenhe/wear-msger?style=flat-square)
 
+> ⚠️ Warning: Since the maintenance of the Ticwear system has been stopped since 2019, only Wear OS will be supported from WearMsger 2.0.0.
+>
+> ⚠️ 警告：由于 Ticwear 从2019年就已经停止维护，WearMsger 从 2.0.0 版本开始仅支持 Wear OS。
+
 **[English](#english)**
 
 ## 概述
@@ -28,7 +32,7 @@ WearMsger 是 [WearTools](https://github.com/ichenhe/WearTools) 的升级版， 
    在 Module 的 build.gradle 中添加 WearTools 的依赖：`implementation "me.chenhe:wear-msger:{version}"`
    如果正在使用 Android studio 3.0 以下版本，请把 `implementation` 替换为 `compile`.
 
-2. 额外依赖。
+2. 额外依赖。(**2.0.0 版本不再需要**)
 
    由于 JCenter 已经停止维护个人仓库，并且 Ticwear 也已经停止维护。但是 Android Studio 无法对本地依赖的 aar 进行打包。所以请务必手动添加 [mobvoi.aar](https://github.com/ichenhe/Wear-Msger/blob/master/wearmsgerlib/libs/mobvoi-api-1.1.1.aar) 为依赖项。
 
@@ -65,10 +69,10 @@ WearMsger can dramatically simplify the communication code between wear and mobi
 
 1. Add dependence.
 
-   Add dependence in Module's build.gradle: `implementation "cc.chenhe:wear-msger:{version}"`.
+   Add dependence in Module's build.gradle: `implementation "me.chenhe:wear-msger:{version}"`.
    If you are using Android studio below 3.0，please replace `implementation` with `compile`.
 
-2. Extra dependence.
+2. Extra dependence. (**v2.0.0 is no longer required**)
 
    Jcenter has stopped maintaining personal repositories, and Ticwear has stopped maintenance. But Android Studio cannot package local aar dependent to aar. So be sure to manually add [mobvoi.aar](https://github.com/ichenhe/Wear-Msger/blob/master/wearmsgerlib/libs/mobvoi-api-1.1.1.aar) as a dependency.
 

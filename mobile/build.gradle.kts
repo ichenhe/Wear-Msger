@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     defaultConfig {
-        applicationId("cc.chenhe.lib.wearmsger.demo")
+        applicationId("me.chenhe.wearmsger.demo")
         minSdkVersion(21)
-        targetSdkVersion(29)
+        targetSdkVersion(30)
         versionCode(1)
         versionName("1.0")
     }
@@ -30,6 +30,7 @@ dependencies {
     wearApp(":wear")
 
     implementation("androidx.appcompat:appcompat:1.3.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("androidx.core:core-ktx:1.6.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     testImplementation("junit:junit:4.13.2")
