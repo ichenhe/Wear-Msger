@@ -32,7 +32,7 @@ jobs:
           java-version: '11'
 
       - name: Build and upload to OSSRH
-        run: './gradlew publish --no-daemon --no-parallel'
+        run: 'chmod +x gradlew && ./gradlew publish --no-daemon --no-parallel'
 
       - name: Release to maven central
         run: './gradlew closeAndReleaseRepository'
