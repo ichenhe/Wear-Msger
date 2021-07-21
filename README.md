@@ -29,7 +29,7 @@ WearMsger 是 [WearTools](https://github.com/ichenhe/WearTools) 的升级版， 
 
 1. 添加依赖。
 
-   在 Module 的 build.gradle 中添加 WearTools 的依赖：`implementation "me.chenhe:wear-msger:{version}"`
+   在 Module 的 build.gradle 中添加 WearTools 的依赖：`implementation "me.chenhe:wearmsger:{version}"`
    如果正在使用 Android studio 3.0 以下版本，请把 `implementation` 替换为 `compile`.
 
 2. 额外依赖。(**2.0.0 版本不再需要**)
@@ -38,6 +38,15 @@ WearMsger 是 [WearTools](https://github.com/ichenhe/WearTools) 的升级版， 
 
 
 ### 具体使用方法见 [Wiki](https://github.com/liangchenhe55/Wear-Msger/wiki)
+
+## 迁移到 v2
+
+⚠️ V2 仅支持 Wear OS 系统。
+
+- 依赖 id 改为 `me.chenhe:wearmsger`。（v1 版本是 `cc.chenhe:wear-msger`）
+- 从 JCenter 迁移到 Maven Central。
+- 无需进行 `WH.init()` 初始化。
+- 一些兼容性的类已经删除，你应该直接使用 gms 中提供的。
 
 ## 与 WearTools 区别
 
@@ -69,7 +78,7 @@ WearMsger can dramatically simplify the communication code between wear and mobi
 
 1. Add dependence.
 
-   Add dependence in Module's build.gradle: `implementation "me.chenhe:wear-msger:{version}"`.
+   Add dependence in Module's build.gradle: `implementation "me.chenhe:wearmsger:{version}"`.
    If you are using Android studio below 3.0，please replace `implementation` with `compile`.
 
 2. Extra dependence. (**v2.0.0 is no longer required**)
@@ -78,6 +87,15 @@ WearMsger can dramatically simplify the communication code between wear and mobi
 
 
 ### For the detail of usage, see [Wiki](https://github.com/liangchenhe55/Wear-Msger/wiki).
+
+## Migrate to v2
+
+⚠️ V2 only support Wear OS system.
+
+- Dependence id has changed to `me.chenhe:wearmsger`. (Old one is `cc.chenhe:wear-msger`)
+- Move from JCenter to Maven Central.
+- `WH.init()` is no longer needed.
+- Some compatible class has been deleted and you should import them from gms.
 
 ## Different from WearTools
 
