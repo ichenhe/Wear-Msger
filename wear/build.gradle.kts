@@ -33,6 +33,7 @@ dependencies {
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     compileOnly("com.google.android.wearable:wearable:2.8.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
 }

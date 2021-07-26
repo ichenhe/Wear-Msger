@@ -1,10 +1,10 @@
 package me.chenhe.lib.wearmsger.service
 
-import android.app.Service
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LifecycleService
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.MessageEvent
 
@@ -45,11 +45,12 @@ import com.google.android.gms.wearable.MessageEvent
  * </service>
  * ```
  */
-abstract class WMListenerService : Service() {
+abstract class WMListenerService : LifecycleService() {
 
     private val binder = LocalBinder()
 
     override fun onBind(intent: Intent): IBinder {
+        super.onBind(intent)
         return binder
     }
 
