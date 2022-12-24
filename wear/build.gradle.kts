@@ -1,15 +1,15 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 33
     defaultConfig {
         applicationId = "me.chenhe.wearmsger.demo"
         minSdk = 22
-        targetSdk = 30
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
     }
@@ -29,12 +29,12 @@ dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(project(path = ":wearmsgerlib"))
 
-    implementation("com.google.android.support:wearable:2.8.1")
-    implementation("com.google.android.gms:play-services-wearable:17.1.0")
+    implementation("com.google.android.support:wearable:2.9.0")
+    implementation("com.google.android.gms:play-services-wearable:18.0.0")
     implementation("androidx.percentlayout:percentlayout:1.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    compileOnly("com.google.android.wearable:wearable:2.8.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+    compileOnly("com.google.android.wearable:wearable:2.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }

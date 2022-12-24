@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     class TakePhoneContract : ActivityResultContract<Unit, Bitmap?>() {
-        override fun createIntent(context: Context, input: Unit?): Intent {
+        override fun createIntent(context: Context, input: Unit): Intent {
             return Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         }
 

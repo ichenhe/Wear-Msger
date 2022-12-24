@@ -32,10 +32,7 @@ internal class GmsListenerAgentService : WearableListenerService(), ListenerAgen
         delegateOnMessageReceived(messageevent)
     }
 
-    override fun onDataChanged(buffer: DataEventBuffer?) {
-        if (buffer == null) {
-            return
-        }
+    override fun onDataChanged(buffer: DataEventBuffer) {
         for (event in buffer) {
             when (event.type) {
                 DataEvent.TYPE_CHANGED -> delegateOnDataChanged(
@@ -47,5 +44,4 @@ internal class GmsListenerAgentService : WearableListenerService(), ListenerAgen
             }
         }
     }
-
 }
