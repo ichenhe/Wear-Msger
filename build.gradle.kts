@@ -6,10 +6,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.2.2")
+        classpath("com.android.tools.build:gradle:7.3.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
 
-        classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.22.0")
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.5.0")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle.kts files

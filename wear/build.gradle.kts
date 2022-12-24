@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     defaultConfig {
-        applicationId("me.chenhe.wearmsger.demo")
-        minSdkVersion(22)
-        targetSdkVersion(30)
-        versionCode(1)
-        versionName("1.0")
+        applicationId = "me.chenhe.wearmsger.demo"
+        minSdk = 22
+        targetSdk = 30
+        versionCode = 1
+        versionName = "1.0"
     }
     buildTypes {
         getByName("release") {
@@ -22,6 +22,7 @@ android {
             )
         }
     }
+    namespace = "me.chenhe.lib.wearmsger.demo"
 }
 
 dependencies {
