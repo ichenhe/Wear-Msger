@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.wearable.DataMapItem
@@ -32,6 +33,11 @@ class MainActivity : WearableActivity() {
         ctx = this
         tv = findViewById(R.id.text)
         iv = findViewById(R.id.imageView)
+        findViewById<Button>(R.id.button).setOnClickListener {
+            GlobalScope.launch {
+                MessageHub.sendMessage(ctx, "/msg/send-to-phone", "Hello, I'm watch!")
+            }
+        }
     }
 
     private val msgListener = object : MessageListener {

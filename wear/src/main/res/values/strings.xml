@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">WearMsgerDemo</string>
     <string name="tip">Use phone to send…</string>
+    <string name="send">Send Message</string>
 </resources>
